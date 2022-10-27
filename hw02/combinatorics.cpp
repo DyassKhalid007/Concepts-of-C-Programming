@@ -3,17 +3,31 @@
 
 uint64_t factorial(uint64_t val) {
     // TODO
-    return 0;
+
+    if(val==0||val==1){
+        return 1;
+    }else{
+        return val*factorial(val-1);
+    }
+    
+
+    
 }
 
 
 uint64_t permutation(uint64_t val, uint64_t val2) {
     // TODO
-    return 0;
+
+    auto upper{factorial(val)};
+    auto lower{factorial(val-val2)};
+    return (upper/lower);
 }
 
 
 uint64_t combination(uint64_t val, uint64_t val2) {
     // TODO
-    return 0;
+    auto perm{permutation(val,val2)};
+    auto kfact{factorial(val2)};
+
+    return (perm/kfact);
 }
