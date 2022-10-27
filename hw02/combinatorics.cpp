@@ -18,9 +18,14 @@ uint64_t factorial(uint64_t val) {
 uint64_t permutation(uint64_t val, uint64_t val2) {
     // TODO
 
-    auto upper{factorial(val)};
-    auto lower{factorial(val-val2)};
-    return (upper/lower);
+    if(val2>val){
+        return 0;
+    }else{
+ 
+        auto upper{factorial(val)};
+        auto lower{factorial(val-val2)};
+        return (upper/lower);
+    }
 }
 
 
