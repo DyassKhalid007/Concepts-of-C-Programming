@@ -13,6 +13,7 @@ before_script:
   - if [[ "$TEST_HASH" == "$TEST_HASH_EXPECTED" ]]; then echo "hash ok for tests, CMakeLists.txt"; else echo -n "contents of tests, CMakeLists.txt are not as expected! to fix this, git restore -s upstream/master tests, CMakeLists.txt .gitlab-ci.yml"; exit 1; fi
   - export GCC_COLORS=yes
 
+
 stages:
 - compile
 - test
