@@ -6,7 +6,7 @@
 
 int main() {
     // here you can test your functions
-    std::cout << "perm(5, 2)=" << permutation(4, 20) << std::endl;
+    std::cout << "perm(5, 2)=" << permutation(5, 2) << std::endl;
 
     return 0;
 }
