@@ -28,6 +28,9 @@ using number_t = int64_t;
 struct storage {
     std::vector<number_t> numbers;
     std::vector<std::string> names;
+
+    std::vector<std::pair<std::string,number_t>> map; 
+    
 };
 
 
@@ -76,5 +79,18 @@ void sort(storage& contacts);
  */
 std::string get_name_by_number(storage& contacts, number_t number);
 
+
+/**
+ * Find the length of the name
+ */
+
+number_t get_length(std::string name);
+
+
+/**
+ * Finds whether a name exists already or not
+ */
+
+bool is_exists(const storage&contacts,std::string name);
 
 } // namespace contact_list
