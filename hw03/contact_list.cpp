@@ -9,6 +9,19 @@
 
 // TODO create implementation here!
 
+/*
+
+references used:
+
+https://en.cppreference.com/w/cpp/algorithm/find
+https://en.cppreference.com/w/cpp/algorithm/sort
+https://learn.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp?view=msvc-170
+
+
+
+
+
+*/
 
 namespace contact_list{
 
