@@ -16,6 +16,9 @@ references used:
 https://en.cppreference.com/w/cpp/algorithm/find
 https://en.cppreference.com/w/cpp/algorithm/sort
 https://learn.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp?view=msvc-170
+https://stackoverflow.com/questions/26903602/an-enclosing-function-local-variable-cannot-be-referenced-in-a-lambda-body-unles
+https://en.cppreference.com/w/cpp/container/vector/erase
+
 
 
 
