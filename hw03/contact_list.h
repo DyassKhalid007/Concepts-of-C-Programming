@@ -93,4 +93,12 @@ number_t get_length(std::string name);
 
 bool is_exists(const storage&contacts,std::string name);
 
+
+/**
+ * Finds whether a name exists already or not
+ */
+
+auto find_iterator(const storage&contacts,std::string name);
+
+
 } // namespace contact_list

@@ -134,12 +134,6 @@ bool remove(storage& contacts, std::string_view name){
    }
     return false;
 
-
-
-
-
-    return false;
-
 }
 
 void sort(storage& contacts){
