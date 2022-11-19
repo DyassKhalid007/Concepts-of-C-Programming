@@ -11,12 +11,8 @@ namespace vm {
  */
 void test_vm() {
     std::string program = (
-        "LOAD_CONST 432\n"
-        "LOAD_CONST 905\n"
-        "ADD\n"
-        "PRINT\n"
-        "EXIT\n");
-
+        "EXIT\n"
+                                );
     std::cout << "initializing vm..." << std::endl;
     // create it in debug-mode!
     vm_state state = create_vm(true);
@@ -24,6 +20,14 @@ void test_vm() {
     try {
         std::cout << "assembling..." << std::endl;
         code_t code = assemble(state, program);
+
+        // for(auto &[a,b]:code){
+
+        //     std::cout<<a<<"   :"<<b<<"\n";
+
+        // }
+
+
 
         std::cout << "running..." << std::endl;
         const auto& [exit_state, return_text] = run(state, code);
@@ -55,10 +59,43 @@ void test_vm() {
     }
 }
 
+
+void mytest(){
+
+    vm_state state = create_vm(true);
+
+}
+
 } // namespace vm
 
 
 int main() {
     vm::test_vm();
+
+    // vm::mytest();
+
+    // std::string program = (
+    //     "PRINT\n"
+    //     "LOAD_CONST 432\n"
+    //     "LOAD_CONST 905\n"
+    //     "ADD\n"
+    //     "PRINT\n"
+    //     "EXIT\n");
+    // auto vec = vm::util::split(program,'\n');
+
+    // for(auto &ele:vec){
+    //     std::cout<<vm::util::strip(ele)<<"\n";
+    // }
+    // std::cout<<vm::util::strip("k fk kfkf   \nhello    \nholla")<<"\n";
+
+
+
+
+   
+    
+
+    
+
+    
     return 0;
 }

@@ -9,6 +9,50 @@
 namespace vm {
 
 
+auto ele_pop = [](vm_state &state){
+
+    if (state.stack.size()==0){
+        throw vm_stackfail{"Stack failed"};
+
+    }
+
+    state.stack.pop();
+};
+
+auto first_top = [](vm_state &state){
+
+
+    if (state.stack.size()==0){
+        throw vm_stackfail{"Stack failed"};
+    }
+
+
+    auto top_ele = state.stack.top();
+    return top_ele;
+       
+        
+       
+    };
+
+    auto second_top = [](vm_state & state){
+
+
+        auto top = first_top(state);
+
+        state.stack.pop();
+
+
+
+        auto second =first_top(state);
+
+        state.stack.emplace(top);
+
+        return second;
+
+        
+        
+    };
+
 vm_state create_vm(bool debug) {
     vm_state state;
 
@@ -16,10 +60,140 @@ vm_state create_vm(bool debug) {
     state.debug = debug;
 
 
-    register_instruction(state, "PRINT", [](vm_state& vmstate, const item_t /*arg*/) {
-        std::cout << vmstate.stack.top() << std::endl;
+
+
+    
+
+
+    
+
+    
+
+
+
+    register_instruction(state, "PRINT", [&](vm_state& vmstate, const item_t /*arg*/) {
+        std::cout << first_top(vmstate) << std::endl;
         return true;
     });
+
+
+    register_instruction(state, "LOAD_CONST", [](vm_state& vmstate, const item_t value) {
+        
+        vmstate.stack.emplace(value);
+        return true;
+    });
+
+    register_instruction(state, "ADD",[&](vm_state& vmstate,const item_t) {
+
+
+        item_t top = first_top(vmstate);
+        item_t s_top = second_top(vmstate);
+        vmstate.stack.emplace(top+s_top);
+        return true;
+    });
+
+
+    register_instruction(state, "DIV",[&](vm_state& vmstate,const item_t) {
+
+
+        item_t top = first_top(vmstate);
+        item_t s_top = second_top(vmstate);
+
+        if(top==0){
+
+            throw div_by_zero{"Div by 0"};
+        }
+        
+        auto result = s_top/top;
+        vmstate.stack.emplace(result);
+        return true;
+    });
+    register_instruction(state, "EQ",[&](vm_state& vmstate,const item_t) {
+
+
+        item_t top = first_top(vmstate);
+        item_t s_top = second_top(vmstate);
+
+        item_t result = top==s_top; 
+        vmstate.stack.emplace(result);
+        return true;
+    });
+
+    register_instruction(state, "NEQ",[&](vm_state& vmstate,const item_t) {
+
+
+        item_t top = first_top(vmstate);
+        item_t s_top = second_top(vmstate);
+
+        item_t result = !(top==s_top); 
+        vmstate.stack.emplace(result);
+        return true;
+    });
+
+    register_instruction(state, "DUP",[&](vm_state& vmstate,const item_t) {
+
+
+        item_t top = first_top(vmstate); 
+        vmstate.stack.emplace(top);
+        return true;
+    });
+
+    register_instruction(state, "EXIT",[](vm_state& vmstate,const item_t) {
+
+
+        item_t top = first_top(vmstate); 
+        return false;
+    });
+
+    register_instruction(state, "POP",[](vm_state& vmstate,const item_t) {
+
+        ele_pop(vmstate);
+        return true;
+    });
+
+    register_instruction(state, "WRITE",[&](vm_state& vmstate,const item_t) {
+
+        auto top = first_top(vmstate);
+
+        vmstate.result+=std::to_string(top);
+        return true;
+    });
+
+
+    register_instruction(state, "WRITE_CHAR",[&](vm_state& vmstate,const item_t) {
+
+        auto top = static_cast<char>(first_top(vmstate));
+        vmstate.result+=top;
+        return true;
+    });
+
+
+    register_instruction(state, "JMP",[](vm_state& vmstate,const item_t ins_code) {
+
+        vmstate.pc = ins_code;
+        return true;
+    });
+
+
+    register_instruction(state, "JMPZ",[&](vm_state& vmstate,const item_t ins_code) {
+
+        auto top = first_top(vmstate);
+
+        ele_pop(vmstate);
+
+
+        if(top==0){
+            vmstate.pc = ins_code;
+            
+        }
+        return true;
+    });
+
+
+    
+
+
+    
 
 
     // TODO create instructions
@@ -33,6 +207,16 @@ void register_instruction(vm_state& state, std::string_view name,
     size_t op_id = state.next_op_id;
 
     // TODO make instruction available to vm
+
+    std::string instrunction_name{name};
+    state.instruction_ids.emplace(instrunction_name,op_id);
+    state.instruction_names.emplace(op_id,instrunction_name);
+    state.instruction_actions.emplace(op_id,action);
+    state.next_op_id++;
+
+
+
+
 }
 
 
@@ -102,9 +286,18 @@ std::tuple<item_t, std::string> run(vm_state& vm, const code_t& code) {
         vm.pc += 1;
 
         // TODO execute instruction and stop if the action returns false.
+
+        if(vm.pc>code.size()){
+            throw vm_segfault{"Illegal memory requested"};
+        }
+        auto func = vm.instruction_actions[op_id];
+
+        if (!func(vm,arg)){
+            break;
+        }
     }
 
-    return {0, ""}; // TODO: return tuple(exit value, output text)
+    return {first_top(vm), vm.result}; // TODO: return tuple(exit value, output text)
 }
 
 
