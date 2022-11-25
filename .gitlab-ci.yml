@@ -10,9 +10,8 @@ before_script:
 
   - echo $TEST_HASH
   - echo $TEST_HASH_EXPECTED
-  - if [[ "$TEST_HASH" == "$TEST_HASH_EXPECTED" ]]; then echo "hash ok for tests/"; else echo -n "contents of tests/ are not as expected! to fix this, git restore -s upstream/master tests/ .gitlab-ci.yml"; exit 1; fi
+  - if [[ "$TEST_HASH" == "$TEST_HASH_EXPECTED" ]]; then echo "hash ok for tests, CMakeLists.txt"; else echo -n "contents of tests, CMakeLists.txt are not as expected! to fix this, git restore -s upstream/master tests, CMakeLists.txt .gitlab-ci.yml"; exit 1; fi
   - export GCC_COLORS=yes
-
 
 stages:
 - compile
@@ -38,7 +37,10 @@ build-gcc:
   <<: *build_job_artifact
   image: cpp/compiler:20
   script:
-    - CXX=g++ ./tests/hw01/compile
+    - mkdir -p build
+    - cd build
+    - cmake ..
+    - make $CURRENT_HW ${CURRENT_TEST} -j4 VERBOSE=1
   tags:
     - linux
 
@@ -46,7 +48,10 @@ build-clang:
   <<: *build_job_artifact
   image: cpp/compiler:20
   script:
-    - CXX=clang++ CXXFLAGS="-stdlib=libc++ -Wl,-lc++abi" ./tests/hw01/compile
+    - mkdir -p build
+    - cd build
+    - cmake .. -DCMAKE_CXX_COMPILER="clang++" -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DCMAKE_EXE_LINKER_FLAGS="-lc++abi"
+    - make $CURRENT_HW ${CURRENT_TEST} -j4 VERBOSE=1
   tags:
     - linux
 
@@ -56,7 +61,8 @@ test-gcc:
   stage: test
   image: cpp/compiler:20
   script:
-    - ./tests/hw01/test
+    - cd build
+    - ctest -R $CURRENT_HW -V -O ctest.log
   dependencies:
     - build-gcc
   artifacts:
@@ -72,7 +78,8 @@ test-clang:
   stage: test
   image: cpp/compiler:20
   script:
-    - ./tests/hw01/test
+    - cd build
+    - ctest -R $CURRENT_HW -V -O ctest.log
   dependencies:
     - build-clang
   tags:
