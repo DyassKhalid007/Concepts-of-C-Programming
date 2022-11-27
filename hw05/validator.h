@@ -19,6 +19,13 @@ struct Valid {};
 /*
  * TODO: all new states go between here...
  */
+
+struct SelectStmt{};
+struct AllColumns{};
+struct NamedColumn{};
+struct MoreColumns{};
+struct FromClause{};
+struct TableName{};
 /*
  * ... and here
  */
@@ -28,7 +35,11 @@ struct Valid {};
 /// variant of all possible states of our finite machine
 /// TODO: Add all the possible states to the variant
 using State =
-    std::variant<state::Start, state::Invalid, state::Valid>;
+    std::variant<state::Start, state::Invalid, 
+    state::Valid, state::SelectStmt, 
+    state::AllColumns, state::NamedColumn,
+    state::MoreColumns, state::FromClause,
+    state::TableName>;
 
 /// Transition from the `Start` state to the next state depending on the given
 /// token
@@ -49,6 +60,13 @@ State transition(state::Invalid, Token token);
  * TODO: all of the transition functions from the newly created states go
  * between here...
  */
+
+State transition(state::FromClause, Token token);
+State transition(state::SelectStmt, Token token);
+State transition(state::AllColumns, Token token);
+State transition(state::NamedColumn, Token token);
+State transition(state::MoreColumns, Token token);
+State transition(state::TableName, Token token);
 /*
  * ... and here
  */
@@ -70,8 +88,11 @@ public:
   /// Moves from one state to the next given the token.
   void handle(Token token);
 
+  State getValue() const; 
+
 private:
   State state_ = state::Start{};
+
 };
 
 /// TODO: Implement this function!
@@ -90,4 +111,7 @@ private:
 /// These sequences must be given in a `std::vector<Token>`
 [[nodiscard]]
 bool is_valid_sql_query(std::vector<Token> tokens);
+
+
+
 } // namespace sql
