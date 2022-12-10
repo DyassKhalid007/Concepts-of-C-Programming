@@ -336,7 +336,7 @@ TEST_CASE("Reduction") {
     CHECK_EQ(linalg::norm(linalg::normalized(y)), doctest::Approx(1));
   }
 
-  SUBCASE("Test dot 4") {
+  SUBCASE("Test dot 3") {
     linalg::Vector x({1, 2, 3});
     linalg::Vector y({1, 0});
     CAPTURE(x);

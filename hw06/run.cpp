@@ -65,7 +65,7 @@ int main() {
 
   std::cout<<dot<<"\n";
 
-  
+
     
 
   // y+=x; 
