@@ -3,6 +3,11 @@
 #include <ostream>
 #include <utility>
 #include <vector>
+#include <numeric>
+#include <cmath>
+#include <cfenv>
+
+
 
 namespace linalg {
 
@@ -13,6 +18,23 @@ public:
   /// These are so called associated types. They are associated with my vector.
   using iterator = std::vector<float>::iterator;
   using const_iterator = std::vector<float>::const_iterator;
+
+
+  // iterator it; 
+  // const_iterator const_it; 
+
+
+  void action(float & val, auto operation){
+
+    std::for_each(data_.begin(),data_.end(),
+        [&val,&operation](float &n){n = operation(n,val);}
+        );
+  }
+
+  void action(const Vector&y,auto operation){
+
+    data_ = operation(data_,y.data_); 
+  }
 
   /// Default constructor
   Vector() = default;
@@ -123,6 +145,9 @@ public:
   /// different size
   auto operator-=(const Vector &y) -> Vector &;
 
+
+  auto operator*=(const Vector &y) -> Vector &;
+
 private:
   std::vector<float> data_;
 };
@@ -230,4 +255,10 @@ auto operator-(float val, const Vector &x) -> Vector;
 /// Return a vector, which is the multiplication of each coefficient of the
 /// given vector and the scalar
 auto operator*(float val, const Vector &x) -> Vector;
+
+
+void check_size(const Vector &x);
+
+
+
 } // namespace linalg
