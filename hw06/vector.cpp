@@ -280,6 +280,8 @@ namespace linalg{
 
 
         return std::accumulate(x.begin(),x.end(),1,std::multiplies<float>{});
+
+        // return std::reduce(x.begin(),x.end(),1,std::multiplies<float>{});
     }
 
 
@@ -301,23 +303,44 @@ namespace linalg{
     }
 
     auto dot(const Vector &x, const Vector &y) -> float{
+        Vector result;
+        result.assign(x);
+        result*=y; 
+        return sum(result);
+    }
+
+    auto norm(const Vector &x) -> float{
 
 
         Vector result;
+
         result.assign(x);
 
-        result*=y; 
+        result*=result; 
 
-
-        return sum(result);
+        return std::sqrt(sum(result));
 
     }
 
-    auto norm(const Vector &x) -> float{}
+    auto normalize(Vector &x) -> void{
 
-    auto normalize(Vector &x) -> void{}
 
-    auto normalized(const Vector &x) -> Vector{}
+        auto calc_norm = norm(x); 
+
+        x/=calc_norm;
+    }
+
+    auto normalized(const Vector &x) -> Vector{
+
+        Vector result; 
+        result.assign(x);
+
+        auto calc_norm = norm(x);
+
+        result/=calc_norm;
+
+        return result;
+    }
 
     auto floor(const Vector &x) -> Vector{
 

@@ -59,33 +59,27 @@ int main() {
   // std::cout<<linalg::min(x)<<"\n";
 
 
-   linalg::Vector x({1, 2, 3});
-  linalg::Vector y({0, 1, 0});
-  auto dot = linalg::dot(x, y);
+  //  linalg::Vector x({1, 2, 3});
+  // linalg::Vector y({0, 1, 0});
+  // auto dot = linalg::dot(x, y);
 
-  std::cout<<dot<<"\n";
+  // std::cout<<dot<<"\n";
 
+  // std::cout<<linalg::dot(x, y)<<"  "<<linalg::dot(y, x)<<"\n";
+
+
+    linalg::Vector x({0.43278453, 0.14044682, 0.83455662, 0.67914679,
+                      0.58428674, 0.89063629, 0.50002398, 0.45118024,
+                      0.31165657, 0.74530963});
+    linalg::Vector y({0.7733542, 0.15135689, 0.60560901, 0.13599972, 0.54029262,
+                      0.06325417, 0.76008249, 0.02780873, 0.70149423,
+                      0.3950426});
 
     
 
-  // y+=x; 
-
-
-
-
-  // linalg::Vector xx({0.43278453f, 0.14044682f, 0.83455662f, 0.67914679f,
-  //                         0.58428674f, 0.89063629f, 0.50002398f, 0.45118024f,
-  //                         0.31165657f, 0.74530963f});
-  // linalg::Vector yy({0.7733542f, 0.15135689f, 0.60560901f, 0.13599972f,
-  //                         0.54029262f, 0.06325417f, 0.76008249f, 0.02780873f,
-  //                         0.70149423f, 0.3950426f});
-
-
-  // std::cout<<xx;
-  // xx+=yy;
-
-  // std::cout<<xx;
-
+    auto dot = linalg::dot(x, y);
+    // CHECK_EQ(dot, doctest::Approx(1.5399735709263176));
+    std::cout<<linalg::dot(x, y)<<"  "<<linalg::dot(y, x)<<"\n";
 
 
 }
