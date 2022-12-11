@@ -91,7 +91,7 @@ namespace linalg{
     auto Vector::operator[](int idx) -> float &{
 
         int index{0};
-        int cur_size = size();
+        auto cur_size = size();
         if (idx<0){
             index = cur_size + idx;
         }else{
@@ -113,29 +113,22 @@ namespace linalg{
         // return (*this)[idx];
 
         int index{0};
-        int cur_size = size();
+        auto cur_size = size();
         if (idx<0){
             index = cur_size + idx;
         }else{
             index = idx;
         }
-
-        
-
             if (index<0||index>=cur_size){
                 throw (std::out_of_range{"Out of range"});
             }
-
             return data_.at(index);
-    
-
-        
     }
 
     auto Vector::coeff(int idx) -> float &{
 
 
-        int cur_size = size();
+        auto cur_size = size();
 
         if(idx>=cur_size||idx<0){
             throw (std::out_of_range{"Out of range"});
@@ -148,7 +141,7 @@ namespace linalg{
 
     auto Vector::coeff(int idx) const -> const float &{
 
-        int cur_size = size();
+        auto cur_size = size();
 
         if(idx>=cur_size||idx<0){
             throw (std::out_of_range{"Out of range"});
@@ -188,14 +181,12 @@ namespace linalg{
         if(y.size()!=size()){
             throw (std::invalid_argument{"Diff sizes"});
         }
+        // for(size_t i=0;i<size();i++){
 
+        //     data_.at(i) = data_.at(i) + y[i];
+        // }
 
-        for(auto i=0;i<size();i++){
-
-            data_.at(i) = data_.at(i) + y[i];
-        }
-
-
+    std::transform(begin(),end(),y.begin(),begin(),std::plus<>{});
     return *this;
          
 
@@ -210,10 +201,12 @@ namespace linalg{
             throw (std::invalid_argument{"Diff sizes"});
         }
 
-                for(auto i=0;i<size();i++){
+        //         for(size_t i=0;i<size();i++){
 
-            data_.at(i) = data_.at(i) - y[i];
-        }
+        //     data_.at(i) = data_.at(i) - y[i];
+        // }
+
+        std::transform(begin(),end(),y.begin(),begin(),std::minus<>{});
 
         return *this;
     }
@@ -262,12 +255,12 @@ namespace linalg{
     auto sum(const Vector &x) -> float{
 
 
-        auto result{0.0};
+        float result{0.0};
 
-        for(auto i=x.begin();i!=x.end();i++){
 
-            result= result + *i;
-        }
+        result = std::accumulate(x.begin(),x.end(),0.f,std::plus<>{});
+
+
 
         return result;
 
@@ -279,7 +272,7 @@ namespace linalg{
     auto prod(const Vector &x) -> float{
 
 
-        return std::accumulate(x.begin(),x.end(),1,std::multiplies<float>{});
+        return std::accumulate(x.begin(),x.end(),1.f,std::multiplies<float>{});
 
         // return std::reduce(x.begin(),x.end(),1,std::multiplies<float>{});
     }
@@ -294,10 +287,11 @@ namespace linalg{
             throw (std::invalid_argument{"Invalid argument"});
         }
 
-        for(auto i=0;i<size();i++){
+        // for(unsigned i=0;i<size();i++){
 
-            data_.at(i) = data_.at(i)*y[i];
-        }
+        //     data_.at(i) = data_.at(i)*y[i];
+        // }
+        std::transform(begin(),end(),y.begin(),begin(),std::multiplies<>{});
 
         return *this; 
     }
@@ -306,7 +300,13 @@ namespace linalg{
         Vector result;
         result.assign(x);
         result*=y; 
+
+
         return sum(result);
+
+
+
+        // return std::inner_product(x.begin(),x.end(),y.begin(),0.f);
     }
 
     auto norm(const Vector &x) -> float{
@@ -367,6 +367,9 @@ namespace linalg{
             n = std::ceil(n);
         });
 
+
+     
+
         return result;
     }
 
@@ -394,7 +397,8 @@ namespace linalg{
 
          std::for_each(result.begin(),result.end(),[](float&n){
 
-            n = n*(-1);
+            n = -(n);
+
         });
 
 
