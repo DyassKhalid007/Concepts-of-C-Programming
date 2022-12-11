@@ -38,6 +38,8 @@ public:
     data_ = operation(data_,y.data_); 
   }
 
+  auto check_bounds(int idx) const->int;
+
   /// Default constructor
   Vector() = default;
 

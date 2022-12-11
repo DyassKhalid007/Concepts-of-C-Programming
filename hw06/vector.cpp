@@ -87,24 +87,50 @@ namespace linalg{
     }
 
 
+    auto Vector::check_bounds(int idx) const ->int{
 
-    auto Vector::operator[](int idx) -> float &{
 
         int index{0};
-        auto cur_size = size();
+        
+        auto cur_size = static_cast<int>(size());
         if (idx<0){
             index = cur_size + idx;
         }else{
             index = idx;
         }
-
-        
-
             if (index<0||index>=cur_size){
                 throw (std::out_of_range{"Out of range"});
             }
+        return index;
+    }
 
-            return data_.at(index);
+
+
+    auto Vector::operator[](int idx) -> float &{
+
+        // int index{0};
+        // auto cur_size = size();
+        // if (idx<0){
+        //     index = cur_size + idx;
+        // }else{
+        //     index = idx;
+        // }
+
+        
+
+        //     if (index<0||index>=cur_size){
+        //         throw (std::out_of_range{"Out of range"});
+        //     }
+
+        //     return data_.at(index);
+
+
+        // const int val = idx; 
+
+        auto index = check_bounds(idx);
+
+        return data_.at(index);
+
     }
 
     auto Vector::operator[](int idx) const -> const float &{
@@ -112,23 +138,14 @@ namespace linalg{
 
         // return (*this)[idx];
 
-        int index{0};
-        auto cur_size = size();
-        if (idx<0){
-            index = cur_size + idx;
-        }else{
-            index = idx;
-        }
-            if (index<0||index>=cur_size){
-                throw (std::out_of_range{"Out of range"});
-            }
-            return data_.at(index);
+        auto index = check_bounds(idx);
+        return data_.at(index);
     }
 
     auto Vector::coeff(int idx) -> float &{
 
 
-        auto cur_size = size();
+        auto cur_size = static_cast<int>(size());
 
         if(idx>=cur_size||idx<0){
             throw (std::out_of_range{"Out of range"});
@@ -141,7 +158,7 @@ namespace linalg{
 
     auto Vector::coeff(int idx) const -> const float &{
 
-        auto cur_size = size();
+         auto cur_size = static_cast<int>(size());
 
         if(idx>=cur_size||idx<0){
             throw (std::out_of_range{"Out of range"});
@@ -272,7 +289,7 @@ namespace linalg{
     auto prod(const Vector &x) -> float{
 
 
-        return std::accumulate(x.begin(),x.end(),1.f,std::multiplies<float>{});
+        return std::accumulate(x.begin(),x.end(),1.f,std::multiplies<>{});
 
         // return std::reduce(x.begin(),x.end(),1,std::multiplies<float>{});
     }
