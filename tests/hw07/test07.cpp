@@ -688,7 +688,6 @@ TEST_CASE("File_rename") {
 
         // here, fs2 was deallocated, but the file is still living
         // since the filesystem is gone, renaming must no longer work.
-        std::cout<<longliving->rename("best_paper.org")<<"\n";
         CHECK_EQ(longliving->rename("best_paper.org"), false);
     }
 }
