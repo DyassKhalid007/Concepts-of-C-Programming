@@ -3,7 +3,7 @@
 #include <memory>
 #include <string>
 #include <string_view>
-
+#include <algorithm>
 #include "filecontent.h"
 
 
@@ -80,4 +80,5 @@ private:
      * Is empty as long as the file is not registered in a filesystem.
      */
     std::string name;
+    std::weak_ptr<Filesystem> filesystem; 
 };

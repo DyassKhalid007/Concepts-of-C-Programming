@@ -18,6 +18,7 @@ public:
     FileContent(const std::string& content);
     FileContent(std::string&& content);
     FileContent(const char* content);
+    // FileContent(FileContent && content);
 
     /** what's the actual storage size of the file content? */
     size_t get_size() const;
@@ -30,4 +31,5 @@ public:
 
 protected:
     // TODO store shareable file content
+    std::shared_ptr<const std::string> ptr;
 };

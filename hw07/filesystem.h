@@ -76,6 +76,19 @@ public:
    */
   std::string file_overview(bool sort_by_size = false);
 
+
+  bool is_exists(std::string ptr) const;
+
+  // bool tracker_search(File &file);
+
+  void insert(std::string key, std::shared_ptr<File> val){
+
+    this->mapper.emplace(key,val);
+  }
+
 private:
   // TODO store the files
+  std::unordered_map<std::string, std::shared_ptr<File>> mapper;
+
+
 };

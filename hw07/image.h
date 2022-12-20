@@ -15,6 +15,10 @@ public:
   Image(FileContent &&content = {}, resolution_t res = {0, 0});
   // TODO: more member functions
 
+  std::string_view get_type() const;
+
+  size_t get_raw_size() const;
+
   resolution_t get_resolution() const;
 
   void update(FileContent &&new_content, resolution_t size);

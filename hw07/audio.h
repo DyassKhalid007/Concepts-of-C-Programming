@@ -13,6 +13,8 @@ public:
   /**
    * Get the duration of this audio file.
    */
+  std::string_view get_type() const;
+  size_t get_raw_size() const;
   unsigned get_duration();
 
   void update(FileContent &&new_content, unsigned new_duration);

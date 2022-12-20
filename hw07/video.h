@@ -16,8 +16,11 @@ public:
         double duration = 0);
 
   // TODO: more member functions
+  std::string_view get_type() const;
+  size_t get_raw_size() const;
 
   resolution_t get_resolution() const;
+
   double get_duration() const;
 
   void update(FileContent &&new_content, resolution_t size, double duration);
