@@ -47,8 +47,9 @@ bool Filesystem::rename_file(std::string_view source, std::string_view dest) {
   // TODO file renaming
 
   auto file = get_file(source);
+  auto is_there = get_file(dest);
 
-  if(file){
+  if(file&&!is_there){
 
     this->remove_file(file->get_name());
     file->name = dest;
