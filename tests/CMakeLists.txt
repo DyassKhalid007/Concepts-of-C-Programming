@@ -24,6 +24,7 @@ endfunction()
 add_subdirectory("hw08")
 =======
 add_subdirectory("hw03")
+<<<<<<< HEAD
 include(CTest)
 include(doctest)
 
@@ -48,3 +49,5 @@ endfunction()
 
 add_subdirectory("hw02")
 >>>>>>> 4e73156 (add hw02)
+=======
+>>>>>>> 6a94225 (Pain in the ass)
