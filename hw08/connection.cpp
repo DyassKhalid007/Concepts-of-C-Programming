@@ -48,6 +48,11 @@ namespace net{
 
     }
 
+    int Connection::fd() const{
+
+        return fd_.unwrap();
+    }
+
 
 
 
