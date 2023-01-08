@@ -12,6 +12,11 @@ class Server {
     public:
         Server(uint16_t port);
 
+        Connection accept(){
+
+            return;
+        }
+
     private:
         Socket s;
 };
