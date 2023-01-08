@@ -40,7 +40,7 @@ namespace net{
 
         
         address.sin_family = AF_INET;
-        address.sin_addr.s_addr = INADDR_ANY;
+        address.sin_addr.s_addr = htonl(INADDR_ANY);
         address.sin_port = htons(port);
         int opt = 1;        
         if(bind(fd(), (struct sockaddr*)&address,sizeof(address))< 0) {
