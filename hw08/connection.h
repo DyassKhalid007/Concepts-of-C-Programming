@@ -4,6 +4,12 @@
 #include <istream>
 #include <span>
 #include <string_view>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+ #include <netdb.h>
+#include <vector>
 
 namespace net {
 /// Light wrapper around the libc send(3)-function. Should return the value returned by send(3), and
@@ -22,7 +28,11 @@ namespace net {
 class Connection {
 public:
     /// Take ownership of a file descriptor
-    Connection(FileDescriptor&& fd);
+    Connection(FileDescriptor&& fd){
+
+
+        fd_ = std::move(fd);
+    };
 
     /// Send data from a string_view to the given file descriptor.
     ///
@@ -57,6 +67,7 @@ public:
 
 public:
     FileDescriptor fd_;
+    std::span<char> data;
 };
 
 } // namespace net
