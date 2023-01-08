@@ -15,12 +15,20 @@ class Client {
     Client(){}
     Connection connect(std::string destination,uint16_t port){
 
-        return;
+        FileDescriptor fd;
+
+            Connection c{std::move(fd)};
+
+            return c;
     }
 
     Connection connect(uint16_t port){
 
-        return ;
+        FileDescriptor fd;
+
+            Connection c{std::move(fd)};
+
+            return c;
     }
 
 };

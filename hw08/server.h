@@ -14,7 +14,11 @@ class Server {
 
         Connection accept(){
 
-            return;
+            FileDescriptor fd;
+
+            Connection c{std::move(fd)};
+
+            return c;
         }
 
     private:
