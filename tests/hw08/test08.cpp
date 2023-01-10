@@ -8,7 +8,6 @@
  */
 
 #include <limits>
-#include <iostream>
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 
 // if you activate this, doctest won't swallow exceptions
@@ -140,17 +139,10 @@ TEST_CASE("Connect multiple times from client") {
 
     std::ostringstream str;
     connection1.receive_all(str);
-    std::cout<<str.str()<<"\n";
-    
     str << ".....";
-    std::cout<<str.str()<<"\n";
-    
 
     auto connection2 = client.connect(1337);
     connection2.receive_all(str);
-
-    std::cout<<"Printing for the second connection\n";
-    std::cout<<str.str()<<"\n";
   };
 
   auto future = std::async(tmp);
@@ -159,31 +151,31 @@ TEST_CASE("Connect multiple times from client") {
   CHECK_THROWS(future.get());
 }
 
- TEST_CASE("Testing client server with short messages 1") {
-   const std::string_view data = "Soo much data to send";
+TEST_CASE("Testing client server with short messages 1") {
+  const std::string_view data = "Soo much data to send";
 
-   net::Server srv{1337};
-   std::thread server_thread([&]() {
-     auto connection = srv.accept();
-     connection.send(data);
-   });
+  net::Server srv{1337};
+  std::thread server_thread([&]() {
+    auto connection = srv.accept();
+    connection.send(data);
+  });
 
-   const auto tmp = [&]() {
-     net::Client client{};
-     auto connection = client.connect(1337);
+  const auto tmp = [&]() {
+    net::Client client{};
+    auto connection = client.connect(1337);
 
-     std::ostringstream str;
-     connection.receive(str);
-     return str.str();
-   };
+    std::ostringstream str;
+    connection.receive(str);
+    return str.str();
+  };
 
-   auto future = std::async(tmp);
+  auto future = std::async(tmp);
 
-   server_thread.join();
-   auto received = future.get();
+  server_thread.join();
+  auto received = future.get();
 
-   CHECK_EQ(received, data);
- }
+  CHECK_EQ(received, data);
+}
 
 TEST_CASE("Test messages of size 128 can be send in one chunk") {
   const std::string data = random_string(128);
