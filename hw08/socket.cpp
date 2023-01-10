@@ -45,8 +45,7 @@ namespace net{
         if (setsockopt(fd(), SOL_SOCKET,
                    SO_REUSEADDR | SO_REUSEPORT, &opt,
                    sizeof(opt))) {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
+        throw std::runtime_error{"Setting socket failed"};
     } 
         if(bind(fd(), (struct sockaddr*)&address,sizeof(address))< 0) {
         throw std::runtime_error{"Binding failed"};
