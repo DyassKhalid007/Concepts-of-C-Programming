@@ -10,15 +10,17 @@ class Server {
 
 
     public:
-        Server(uint16_t port){};
+        Server(uint16_t port):s(Socket()){
+
+
+            s.listen(port);
+           
+        };
 
         Connection accept(){
+            
 
-            FileDescriptor fd;
-
-            Connection c{std::move(fd)};
-
-            return c;
+            return s.accept();
         }
 
     private:

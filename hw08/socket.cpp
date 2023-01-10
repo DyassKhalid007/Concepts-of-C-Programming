@@ -7,13 +7,13 @@ namespace net{
 
     bool is_listening(int fd){
 
-        socklen_t opt = 1;
+        int opt;
+        int len = sizeof(int); 
 
-        auto result = getsockopt(fd,SOL_SOCKET,SO_ACCEPTCONN,&opt,(socklen_t*)sizeof(opt));
+        auto result = getsockopt(fd, SOL_SOCKET, SO_ACCEPTCONN, (char *)&opt, (socklen_t *)&len);
+        
+        if(!result){
 
-        if (!result){
-
-            
             return true;
         }
 
@@ -21,6 +21,7 @@ namespace net{
     }
 
     Socket::Socket(){
+
 
         auto val = ::socket(AF_INET,SOCK_STREAM,0);
 
@@ -30,19 +31,23 @@ namespace net{
 
             throw std::runtime_error{"Socket creation failed"};
         }
-
-    }
+}
 
     void Socket::listen(uint16_t port) const{
 
 
         struct sockaddr_in address;
-
-        
         address.sin_family = AF_INET;
         address.sin_addr.s_addr = htonl(INADDR_ANY);
         address.sin_port = htons(port);
-        int opt = 1;        
+        int opt = 1;       
+
+        if (setsockopt(fd(), SOL_SOCKET,
+                   SO_REUSEADDR | SO_REUSEPORT, &opt,
+                   sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    } 
         if(bind(fd(), (struct sockaddr*)&address,sizeof(address))< 0) {
         throw std::runtime_error{"Binding failed"};
     }
@@ -53,6 +58,8 @@ namespace net{
 
     }
 
+    
+
 
 }
 
@@ -60,14 +67,20 @@ namespace net{
     Connection Socket::accept() const{
 
 
+
+
         if(is_listening(fd())){
 
-            FileDescriptor f{std::move(::accept(fd(),NULL,0))};
+            auto result = ::accept(fd(),NULL,0);
 
-            // this->fd_ = std::move(conn);
+            if(result<0){
 
+                throw std::runtime_error{"Listening not happening"};
+
+            }
+
+            FileDescriptor f{std::move(result)};
             Connection c{std::move(f)};
-
             return c;
 
         }
@@ -86,29 +99,28 @@ namespace net{
         struct sockaddr_in address;
         address.sin_port = htons(port);
         address.sin_family = AF_INET;
-        address.sin_addr.s_addr = inet_addr(destination.c_str());
+        // address.sin_addr.s_addr = inet_addr(destination.c_str());
 
-        fd_ = std::move(::connect(fd(),reinterpret_cast<const sockaddr *>(&address),sizeof(address)));
+        if(inet_pton(AF_INET,destination.c_str(),&address.sin_addr)<=0){
+
+            throw std::runtime_error{"Invalid Address"};
+        }
 
 
+       if (::connect(fd(),reinterpret_cast<const sockaddr *>(&address),sizeof(address))<0){
+          throw std::runtime_error{"Connection failed"};
+
+       };
         Connection c{std::move(fd_)};
 
-
         return c;
-
-
-        
-
-
 
     }
 
     Connection Socket::connect(uint16_t port){
-
-        auto it = ::gethostbyname("localhost");
         
         
-        return connect(it->h_name,port);
+        return connect("127.0.0.1",port);
 
 
 

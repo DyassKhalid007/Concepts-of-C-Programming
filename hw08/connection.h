@@ -67,7 +67,7 @@ public:
 
 public:
     FileDescriptor fd_;
-    std::span<char> data;
+    int f;
 };
 
 } // namespace net

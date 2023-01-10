@@ -112,9 +112,14 @@
 
 int main(){
 
-    net::Socket socket;
+    net::Server srv{1337};
 
-    socket.listen(1337);
-    net::is_listening(socket.fd());
-    return 0;
+    net::Socket socket;
+    int fd = socket.fd();
+
+    {
+      auto connection = socket.connect(1337);
+    }
+
+  
 }

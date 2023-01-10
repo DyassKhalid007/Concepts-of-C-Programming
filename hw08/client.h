@@ -10,25 +10,23 @@ namespace net {
  */
 class Client {
 
+    private:
+
+        Socket s;
+
     public:
 
-    Client(){}
+    Client():s(Socket()){}
     Connection connect(std::string destination,uint16_t port){
 
-        FileDescriptor fd;
-
-            Connection c{std::move(fd)};
-
-            return c;
+        return s.connect(destination,port);
     }
 
     Connection connect(uint16_t port){
 
-        FileDescriptor fd;
+        return s.connect(port);
 
-            Connection c{std::move(fd)};
-
-            return c;
+        
     }
 
 };

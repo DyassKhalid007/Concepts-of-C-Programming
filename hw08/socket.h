@@ -56,6 +56,7 @@ public:
 
 private:
     FileDescriptor fd_;
+    int listener;
 };
 
 } // namespace net

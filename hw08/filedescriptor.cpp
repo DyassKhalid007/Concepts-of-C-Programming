@@ -31,10 +31,7 @@ namespace net{
         if(fd_.has_value()){
 
              close(fd_.value());
-
         }
-
-       
         fd_.reset();
     }
     int FileDescriptor::unwrap() const{
