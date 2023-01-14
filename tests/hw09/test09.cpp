@@ -17,7 +17,7 @@
 
 // require at least c++20
 static_assert(__cplusplus >= 202002L);
-
+    
 
 struct Marker final {
     std::string state;
