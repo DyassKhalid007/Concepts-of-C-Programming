@@ -56,8 +56,6 @@ template<unsigned B,unsigned E,unsigned M>
 struct Power{
     static constexpr int value = ((B%M)*(Power<B,E-1,M>::value)%M)%M;
 };
-
-
 template <unsigned B,unsigned M>
 
 struct Power<B,0,M>{
