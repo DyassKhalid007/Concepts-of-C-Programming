@@ -64,19 +64,19 @@ TEST_CASE("Quadruple_full_specialization_test") {
 }
 
 TEST_CASE("GCD_test") {
-   static_assert(gcd(1, 100) == 1);
-   CHECK(gcd(1, 100) == 1);
-   CHECK(gcd(100, 10) == 10);
-   CHECK(gcd(60, 42) == 6);
-   CHECK(gcd(42, 60) == 6);
-   CHECK(gcd(35, 36) == 1);
-   CHECK(gcd(36, 35) == 1);
-CHECK(gcd(20, 30, 40) == 10);
+    static_assert(gcd(1, 100) == 1);
+    CHECK(gcd(1, 100) == 1);
+    CHECK(gcd(100, 10) == 10);
+    CHECK(gcd(60, 42) == 6);
+    CHECK(gcd(42, 60) == 6);
+    CHECK(gcd(35, 36) == 1);
+    CHECK(gcd(36, 35) == 1);
+    CHECK(gcd(20, 30, 40) == 10);
     CHECK(gcd(20, 30, 40, 50) == 10);
-     CHECK(gcd(20, 30, 40, 50, 60) == 10);
-     CHECK(gcd(30, 60, 45, 90) == 15);
+    CHECK(gcd(20, 30, 40, 50, 60) == 10);
+    CHECK(gcd(30, 60, 45, 90) == 15);
     CHECK(gcd(1001, 715, 2145) == 143);
-     CHECK(gcd(1001, 143, 715, 2145) == 143);
+    CHECK(gcd(1001, 143, 715, 2145) == 143);
 }
 
 TEST_CASE("MCM_test") {
