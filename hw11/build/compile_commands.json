@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/dyasskhalid/pikachu_tasks/hw11/build",
+  "command": "/usr/bin/g++-12  -I/home/dyasskhalid/pikachu_tasks/hw11 -g -std=gnu++20 -o CMakeFiles/runhw11.dir/run.o -c /home/dyasskhalid/pikachu_tasks/hw11/run.cpp",
+  "file": "/home/dyasskhalid/pikachu_tasks/hw11/run.cpp"
+}
+]

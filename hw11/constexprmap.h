@@ -94,4 +94,4 @@ constexpr auto create_cexpr_map(Entries&&... entry) {
  */
 template<typename Entry, typename... Rest>
 requires std::conjunction_v<std::is_same<Entry, Rest>...>
-CexprMap(Entry, Rest&&...) ->CexprMap<typename Entry.first_type /* TODO */;
+CexprMap(Entry entry, Rest&&... rest) -> CexprMap<typename Entry::first_type, typename Entry::second_type, 1 + sizeof...(rest)>;
