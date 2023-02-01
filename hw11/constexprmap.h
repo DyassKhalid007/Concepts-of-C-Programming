@@ -16,7 +16,7 @@ public:
     using value_type = V;
 
     template<class... Entries>
-    constexpr CexprMap(Entries&&... entries) : values({std::forward<Entries>(entries)...}) {
+    constexpr CexprMap(Entries&&... entries) : values({entries...}) {
         verify_no_duplicates();
     }
 
@@ -84,7 +84,7 @@ private:
 
 template<typename K, typename V, typename... Entries>
 constexpr auto create_cexpr_map(Entries&&... entries) {
-    return CexprMap<K, V, sizeof...(entries)>{std::forward<Entries>(entries)...};
+    return CexprMap<K, V, sizeof...(entries)>{entries...};
 }
 
 template<typename Entry, typename... Rest>
