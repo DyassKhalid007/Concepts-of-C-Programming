@@ -40,7 +40,10 @@ public:
     constexpr const V &get(const K &key) const {
         auto it = find(key);
         if (it == values.end())
-            throw std::out_of_range("cexpr_map: key not found");
+        {
+             throw std::out_of_range("cexpr_map: key not found");
+        }
+           
         return it->second;
     }
 
@@ -60,7 +63,10 @@ private:
         for (size_t i = 0; i < values.size(); ++i) {
             for (size_t j = i + 1; j < values.size(); ++j) {
                 if (values[i].first == values[j].first)
+                {
                     throw std::invalid_argument("cexpr_map: duplicate keys not allowed");
+                }
+                    
             }
         }
     }
@@ -72,7 +78,10 @@ private:
     constexpr auto find(const K &key) const {
         auto it = values.begin();
         while (it != values.end() && it->first != key)
+        {
             ++it;
+        }
+            
         return it;
     }
 
