@@ -1,24 +1,3 @@
-#pragma once
-
-#include <array>
-#include <type_traits>
-#include <utility>
-#include <stdexcept>
-
-
-/**
- * Compiletime generic lookup map.
- *
- * storage: std::array
- * search-time: linear
- *
- * when the compiler errors, make sure no duplicate keys exist,
- * and that existing keys are requested.
- * exceptions are thrown, which lead to compiler errors otherwise
- *
- * The message may be: "error: ‘*0u’ is not a constant expression"
- * -> nonexistant key
- */
 template<typename K, typename V, size_t count>
 class CexprMap {
 public:
@@ -26,9 +5,7 @@ public:
     using value_type = V;
 
     template<class... Entries>
-    constexpr CexprMap(Entries&&... entries):values({entries...}){
-
-
+    constexpr CexprMap(Entries&&... entries) : values({std::forward<Entries>(entries)...}) {
         verify_no_duplicates();
     }
 
@@ -36,7 +13,6 @@ public:
      * Entry count.
      */
     constexpr size_t size() const {
-
         return count;
     }
 
@@ -44,7 +20,6 @@ public:
      * Is the key in the map?
      */
     constexpr bool contains(const K &key) const {
-
         return find(key) != values.end();
     }
 
@@ -52,14 +27,9 @@ public:
      * Get a key's value
      */
     constexpr const V &get(const K &key) const {
-
         auto it = find(key);
         if (it == values.end())
-        {
-            throw std::out_of_range("key not found");
-
-        }
-            
+            throw std::out_of_range("cexpr_map: key not found");
         return it->second;
     }
 
@@ -67,7 +37,7 @@ public:
      * Get a key's value by map[key].
      */
     constexpr const V &operator [](const K &key) const {
-         return get(key);
+        return get(key);
     }
 
 private:
@@ -79,12 +49,7 @@ private:
         for (size_t i = 0; i < values.size(); ++i) {
             for (size_t j = i + 1; j < values.size(); ++j) {
                 if (values[i].first == values[j].first)
-                {
-
-                    throw std::invalid_argument("duplicate keys not allowed");
-
-                }
-                    
+                    throw std::invalid_argument("cexpr_map: duplicate keys not allowed");
             }
         }
     }
@@ -94,15 +59,10 @@ private:
      *  - `values.end()` if the key is not found.
      */
     constexpr auto find(const K &key) const {
-         auto it = values.begin();
+        auto it = values.begin();
         while (it != values.end() && it->first != key)
-        {
             ++it;
-        }
-            
         return it;
-
-
     }
 
     /**
@@ -111,30 +71,11 @@ private:
     std::array<std::pair<K, V>, count> values;
 };
 
-
-/**
- * Returns CexprMap, a compiletime lookup table from
- * K to V, where all entries of K must be unique.
- *
- * usage: constexpr auto bla = create_cexpr_map<type0, type1>(entry0, entry1, ...);
- */
 template<typename K, typename V, typename... Entries>
-constexpr auto create_cexpr_map(Entries&&... entry) {
-
-
-     return CexprMap<K, V, sizeof...(entry)>{entry...};
+constexpr auto create_cexpr_map(Entries&&... entries) {
+    return CexprMap<K, V, sizeof...(entries)>{std::forward<Entries>(entries)...};
 }
 
-
-
-/**
- * Template deduction guide to deduce the Key-Value types
- * for the CexprMap from the paired entries passed.
- *
- * usage: constexpr CexprMap boss{std::pair{k0, v0}, std::pair{k1, v1}, ...};
- *
- * Uses requires-clause to check if all entries have the same type.
- */
 template<typename Entry, typename... Rest>
 requires std::conjunction_v<std::is_same<Entry, Rest>...>
 CexprMap(Entry entry, Rest&&... rest) -> CexprMap<typename Entry::first_type, typename Entry::second_type, 1 + sizeof...(rest)>;
