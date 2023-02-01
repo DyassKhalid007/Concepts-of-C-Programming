@@ -16,7 +16,7 @@ public:
     using value_type = V;
 
     template<class... Entries>
-    constexpr CexprMap(Entries&&... entries) : values({entries...}) {
+    constexpr CexprMap(Entries&&... entries) : values{entries...} {
         verify_no_duplicates();
     }
 
@@ -41,7 +41,7 @@ public:
         auto it = find(key);
         if (it == values.end())
         {
-             throw std::out_of_range("cexpr_map: key not found");
+             throw std::out_of_range{"key not found"};
         }
            
         return it->second;
@@ -60,11 +60,11 @@ private:
      * Throws std::invalid_argument on duplicate key.
      */
     constexpr void verify_no_duplicates() const {
-        for (size_t i = 0; i < values.size(); ++i) {
-            for (size_t j = i + 1; j < values.size(); ++j) {
+        for (size_t i = 0; i < values.size(); i++) {
+            for (size_t j = i + 1; j < values.size(); j++) {
                 if (values[i].first == values[j].first)
                 {
-                    throw std::invalid_argument("cexpr_map: duplicate keys not allowed");
+                    throw std::invalid_argument("duplicate keys not allowed");
                 }
                     
             }
@@ -79,7 +79,7 @@ private:
         auto it = values.begin();
         while (it != values.end() && it->first != key)
         {
-            ++it;
+           it++;
         }
             
         return it;
@@ -96,6 +96,7 @@ constexpr auto create_cexpr_map(Entries&&... entries) {
     return CexprMap<K, V, sizeof...(entries)>{entries...};
 }
 
+/*Reference: https://stackoverflow.com/questions/40951697/what-are-template-deduction-guides-and-when-should-we-use-them*/
 template<typename Entry, typename... Rest>
 requires std::conjunction_v<std::is_same<Entry, Rest>...>
 CexprMap(Entry entry, Rest&&... rest) -> CexprMap<typename Entry::first_type, typename Entry::second_type, 1 + sizeof...(rest)>;
