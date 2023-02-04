@@ -99,4 +99,4 @@ constexpr auto create_cexpr_map(Entries&&... entries) {
 /*Reference: https://stackoverflow.com/questions/40951697/what-are-template-deduction-guides-and-when-should-we-use-them*/
 template<typename Entry, typename... Rest>
 requires std::conjunction_v<std::is_same<Entry, Rest>...>
-CexprMap(Entry entry, Rest&&... rest) -> CexprMap<typename Entry::first_type, typename Entry::second_type, 1 + sizeof...(rest)>;
+CexprMap(Entry entry, Rest&&... rest) -> CexprMap<typename Entry::first_type, typename Entry::second_type, 1 + sizeof ... (rest)>;
