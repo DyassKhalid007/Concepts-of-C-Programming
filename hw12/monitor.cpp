@@ -33,7 +33,7 @@ FileMonitor::FileMonitor(const std::string &targetpath,
 // Monitor the targetpath for changes and pass information to the logger in case of differences
 void FileMonitor::start(std::chrono::seconds timeout) {
 
-            std::jthread worker([&]{
+            std::thread worker([&]{
 
             auto end_time = std::chrono::system_clock::now() + timeout;
             while (std::chrono::system_clock::now() < end_time) {
