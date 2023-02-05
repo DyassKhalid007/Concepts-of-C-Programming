@@ -4,8 +4,12 @@
 #include <unordered_map>
 #include <string>
 #include <filesystem>
-
+#include <map>
+#include <iostream>
 #include "logger.h"
+
+
+namespace fs = std::filesystem;
 
 /**
  * The File Monitor class keeps a record of files in the targetPath and their last modification time
@@ -28,4 +32,6 @@ public:
 private:
     Logger logger;
     std::chrono::duration<int, std::milli> interval;
+    std::map<fs::path, fs::file_time_type> original_state;
+    std::string filename;
 };
