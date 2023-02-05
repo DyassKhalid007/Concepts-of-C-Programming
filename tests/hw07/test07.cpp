@@ -56,12 +56,10 @@ TEST_CASE("FileContent") {
         const std::string::value_type* bufptr = buf.data();
 
         // move the content
-        
         FileContent fc{std::move(buf)};
+
         // pointers will be the same
         CHECK_EQ(fc.get()->data(), bufptr);
-
-        
     }
 
     SUBCASE("size") {
@@ -75,7 +73,6 @@ TEST_CASE("FileContent") {
         FileContent fc{stuff};
         CHECK_EQ(fc.get_size(), 14);
         CHECK_EQ(*fc.get(), stuff);
-        // std::cout<<stuff;
     }
 
     SUBCASE("copy_init") {
@@ -213,17 +210,11 @@ TEST_CASE("Document") {
     SUBCASE("construction_1") {
         Document file{FileContent{"magic document file"}};
 
-        std::cout<<"hello\n";
         CHECK_EQ(file.get_type(), "DOC");
-        std::cout<<"hello\n";
         CHECK_EQ(file.get_character_count(), 17);
-        std::cout<<"hello\n";
         CHECK_EQ(file.get_size(), 19);
-        std::cout<<"hello\n";
         CHECK_EQ(*file.get_content().get(), "magic document file");
-        std::cout<<"hello\n";
         CHECK_EQ(file.get_raw_size(), 19);
-        std::cout<<"hello\n";
     }
 
     SUBCASE("construction_2") {
@@ -486,7 +477,6 @@ TEST_CASE("Filesystem") {
     CHECK_EQ(fs.use_count(), 1);
 
     CHECK_EQ(fs->register_file("movie_script.org", std::make_shared<Document>("great plot")), true);
-
     CHECK_EQ(fs->register_file("movie.av1", std::make_shared<Video>("awesome content", Video::resolution_t{1920, 1080}, 1200.0)), true);
     CHECK_EQ(fs->register_file("landscape.avif", std::make_shared<Image>("best picture", Image::resolution_t{1920, 1080})), true);
     CHECK_EQ(fs->register_file("music.opus", std::make_shared<Audio>("relaxing music", 420)), true);
@@ -698,7 +688,6 @@ TEST_CASE("File_rename") {
 
         // here, fs2 was deallocated, but the file is still living
         // since the filesystem is gone, renaming must no longer work.
-        std::cout<<"long living count:"<<longliving.use_count()<<"\n";
         CHECK_EQ(longliving->rename("best_paper.org"), false);
     }
 }
