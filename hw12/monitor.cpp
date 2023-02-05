@@ -17,6 +17,8 @@ FileMonitor::FileMonitor(const std::string &targetpath,
     for (const auto& dirEntry : recursive_directory_iterator(targetpath)){
 
         original_state[dirEntry.path()] = fs::last_write_time(dirEntry);
+
+
     }
      
 
@@ -35,13 +37,30 @@ void FileMonitor::start(std::chrono::seconds timeout) {
 
             std::thread worker([&]{
 
-            auto end_time = std::chrono::system_clock::now() + timeout;
-            while (std::chrono::system_clock::now() < end_time) {
+            auto start(std::chrono::high_resolution_clock::now());
+            while (true) {
+
+
+            auto end = std::chrono::high_resolution_clock::now();
+            auto elapsed = end - start;
+            if (elapsed>= timeout) {
+                 break;
+            
+            }
+            for (const auto& entry : recursive_directory_iterator(filename)) {
+            if (!original_state.count(entry.path())) {
+                std::cout << entry.path() << " is a new file.\n";
+                logger.log(entry.path(),status::added);
+                original_state[entry.path()] = fs::last_write_time(entry);
+            }
+            }
 
             for (const auto& entry : recursive_directory_iterator(filename)) {
             auto path = entry.path();
             auto current_write_time = fs::last_write_time(entry);
             auto last_write = original_state[path];
+
+            // std:: cout << path << " about to be checked.\n"; 
 
             // Check if the file has been modified
             if (current_write_time > last_write) {
@@ -51,46 +70,37 @@ void FileMonitor::start(std::chrono::seconds timeout) {
                 original_state[path] = current_write_time;
             }
 
-            // Check if the file has been deleted
-            if (!fs::exists(path) && original_state.count(path)) {
-                std::cout << path << " has been deleted.\n";
-                logger.log(entry.path(),status::removed);
-                original_state.erase(path);
-            }
+
+      }
+
+
+      std::erase_if(original_state,[&](auto kv){
+
+        if(!fs::exists(kv.first)){
+
+            std::cout << kv.first << " has been deleted.\n";
+            logger.log(kv.first,status::removed);
+            return true;
         }
+        return false;
 
-            // Check for new files
-            for (const auto& entry : recursive_directory_iterator(filename)) {
-            if (!original_state.count(entry.path())) {
-                std::cout << entry.path() << " is a new file.\n";
-                logger.log(entry.path(),status::added);
-                original_state[entry.path()] = fs::last_write_time(entry);
-                }
-            }
-     }
+      });
 
+
+
+
+                    
+        
+ 
+
+
+        // std::cout << "\n" << std::endl;
         std::this_thread::sleep_for(interval);
+     }
+        
     });
 
         worker.join();
+        // std::cout << "Hello" << std::endl;
         
-
-       
-            
-
-
-
-
-
-
-
-        
-
-
-
-
-
-    
-
-
 }
